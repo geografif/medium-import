@@ -10,27 +10,64 @@
         <article>
             <section>
                 <div class="pw-post-title">
-                    <h1>Backdating your Medium posts!</h1>
+                    <h1>Polarimetric SAR features could improve oil palm detection accuracy</h1>
                 </div>
                 <p class="pw-post-body-paragraph">
-                    This is a test HTML page that you can import to Medium as 
-                    a template to backdate your post.
-                </p>
-                <p class="pw-post-body-paragraph">
-                    You'll know when you've successfully backdated your post
-                    by looking at the bottom of your article when you import
-                    to Medium: it should say something like: "Originally 
-                    published at *** on [Whatever your date is]."
-                </p>
-                <p class="pw-post-body-paragraph">
-                    If you enjoyed this tutorial and method, please 
-                    drop me a follow on 
-                    <a href="https://liaogg.medium.com">Medium</a>
-                    and 
-                    <a href="https://github.com/kevinMEH">Github.</a>
-                </p>
-                <p class="pw-post-body-paragraph">
-                    Thanks, and bye!
+Oil palms are palm trees that produce oil palm fruit bunches, which are the source of palm oil. It is a highly efficient crop that yields six times more oil in the same area compared to the likes of sunflower, olive, and rapeseed. Palm oil is cheap, which is the reason it can be found on your chocolate spreads, cosmetics, cleaning products, and fuels for your vehicles1.
+
+To meet the global demand, a lot of oil palms are grown particularly in the Southeast Asia region. The production of palm oil, however, is not always sustainable as the plantation often occurs in high conservation value areas such as peatland, forest, and river banks. It is important to know where oil palm plantations are located to determine proper measures for improved land management and sustainable production of palm oil.
+
+Potential of Synthetic Aperture Radar (SAR)
+Such spatially explicit information on oil palm distribution can be derived from remote sensing image interpretation or automated classification. While optical images from passive remote sensing instruments are popularly used for general purposes due to interpretability, these images often suffer from frequent cloud cover where oil palms are planted. Such a problem is not found in images produced by Synthetic Aperture Radar (SAR) active sensors. Furthermore, SAR images provide distinct backscatter of oil palm compared to the surrounding vegetation. This is due to the fact that the SAR signal interacts differently with objects of varying shapes and roughness. The canopy shape of oil palms is unique compared to its surrounding vegetation, thus easily differentiated in SAR images. In optical images, the signal works with color, and with broadband sensors, the canopy of oil palms and surrounding vegetation is not that different.
+
+SAR data are represented in either single, dual, or quad-polarization bands. Sentinel-1 images, which are open-access data produced by Sentinel-1 C-Band SAR instrument, have VV (vertical transmit - vertical receive) and VH (vertical transmit - horizontal receive) bands. These two bands are normally used as input for classification, but additional predictive variables such as textural features and polarimetric decomposition features from PolSAR analysis are reported to aid better accuracy in mapping23.
+
+A little note on SAR polarimetry
+Honestly this is a complex topic with a lot of mathematical equations. So I'm just gonna be brief here.
+
+SAR images consists of complex-valued pixels. These values represent the intensity (which tells how large the signal of ground objects is in a cell) and the phase (which tells how the signal is scattered). The phase-preserving SAR data are usually labeled as Single-Look Complex (SLC). The phase information is useful to characterize the scattering behavior of different ground objects, which technique is known as Polarimetric SAR (PolSAR). While the true PolSAR technique can only be achieved with quad-pol SAR data (such as Radarsat images), some research demonstrated the possibility of using dual-pol SAR data for pseudo-polarimetric decomposition4. The complex-valued pixel can be represented in a coherency (T) or covariance (C) matrix. These matrices can be used as input for polarimetric decomposition, a term similar to image classification used in optical images.
+
+This video demonstrates the steps taken to extract PolSAR features from Sentinel-1 SLC data. The output features can be fed into classifier. Listed below are the summary of required steps:
+
+Load SLC data
+Apply orbit file
+Calibration
+Deburst
+Generate covariance matrix
+Multi-look
+Speckle filter
+Polarimetric decomposition (H-α)
+Terrain correction
+Classification scheme & how distinct is oil palm backscatter on SAR?
+This project focus on the largest producing region of palm oil in Indonesia, Riau Province. In the northern part of the region, at least five major land cover classes can be observed from satellite images shown in the table below.
+
+
+
+Classification scheme
+The reference data were collected from visual interpretation of Sentinel-1 composite and Google Earth images provided in the Google Earth Engine platform. These samples were downloaded and randomly split into training and validation datasets. This sample collection method was used to accommodate other land use classes, as publicly available oil palm datasets often only contain oil palm vs non-oil palm classes. More info on the publicly available datasets can be found here.
+
+One of the ways to assess the separability of each target class is by observing their pixel value distribution across the bands or features as predictive variables in the image classification. As shown in the density plots below, it can be seen that features obtained from PolSAR decomposition provide better discrimination between vegetation classes.
+
+
+
+Density plots of data distribution across land cover classes
+To test whether the addition of PolSAR features improves the mapping accuracy, two datasets are prepared as input in the random forest classifier: (1) VV & VH intensity, and (2) VV & VH + PolSAR entropy (H) & alpha (α).
+
+Which result yields better accuracy?
+Following the accuracy assessment via the confusion matrix of validation samples and corresponding class on the output maps, two commonly used accuracy metrics were produced, which are Overall Accuracy (OA) and Kappa Coefficient (K). The output maps below are purposely presented with a similar color palette as the Sentinel-1 image composite (top) to aid the visual comparison.
+
+
+
+Sentinel-1 composite (top), Dataset 1 map (middle), and Dataset 2 map (bottom)
+While both classification maps appear similar, tons of individual isolated misclassified pixels can be seen more on the Dataset 2 map (bottom). This issue is depicted in the classification accuracy, with the Dataset 1 map (OA: 0.82, k: 0.76 outperforming the Dataset 2 map (OA: 0.65, k: 0.54).
+
+Comparison with previous studies
+To further investigate the result, the Dataset 1 map was compared to publicly available oil palm datasets. As presented in the figure below, a lot of isolated pixels are present which is presumed to be associated with speckles rather than actual changes considering the period gap with other datasets.
+
+
+
+Sentinel-1 composite (top), Dataset 1 map (middle), and Dataset 2 map (bottom)
+Apart from the speckles, the oil palm map from this experiment resembles the oil palm distribution from existing studies. For further improvement, it is suggested to choose a more proper speckle filtering method.
                 </p>
             </section>
         </article>
